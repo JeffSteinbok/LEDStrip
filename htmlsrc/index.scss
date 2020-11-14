@@ -1,0 +1,27 @@
+/* Font Families */
+@font-face
+{
+    font-family: "Segoe UI Web Light";
+    font-style: normal;
+    font-weight: 100;
+    src: local("Segoe UI Light"),local("Segoe UI"),local("HelveticaNeue-Light");
+    unicode-range: U+0-FF,U+300-36F;
+}
+
+@font-face
+{
+    font-family: "Segoe UI Web Regular";
+    font-style: normal;
+    font-weight: normal;
+    src: local("Segoe UI"),local("Helvetica Neue");
+    unicode-range: U+0-FF,U+300-36F;
+}
+
+@font-face
+{
+    font-family: "Segoe UI Web Semibold";
+    font-style: normal;
+    font-weight: bold;
+    src: local("Segoe UI Semibold"),local("Segoe UI Bold"),local("Segoe UI"),local("HelveticaNeue-Medium");
+    unicode-range: U+0-FF,U+300-36F;
+}
