@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { WebServerApiManager, IApiExecutionContext } from "./utilities/WebServerApiManager";
+import { HexColorPicker } from "react-colorful";
+import "react-colorful/dist/index.css";
 
 interface ILEDState {
     effect: string;
@@ -34,7 +36,7 @@ export class LED extends React.Component<any, ILEDState> {
 
     render() {
         return (
-            <div id="led">
+            <div id="main">
                 <h1>LED Strip</h1>
                 <div id="configSection">
                     <div className="config">
@@ -63,8 +65,18 @@ export class LED extends React.Component<any, ILEDState> {
                         <div className="config">
                             <div className="name"> Color (hex):</div>
                             <div>
-                                <input onChange={ e => { this.perEffectParams["solid"]["color"] = e.target.value; } } defaultValue={ this.perEffectParams["solid"]["color"] } />
+                                <HexColorPicker color={ this.state.colorValue }
+                                    onChange={ color => {
+                                        this.setState({ colorValue: color });
+                                        this.perEffectParams["solid"]["color"] = color.substring(1);
+                                    } } />
+                                <input onChange={ e => {
+                                    this.setState({ colorValue: e.target.value });
+                                    this.perEffectParams["solid"]["color"] = e.target.value.substring(1);
+                                } }
+                                    value={ this.state.colorValue } />
                             </div>
+
                         </div>
                     }
 

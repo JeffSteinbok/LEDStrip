@@ -10,7 +10,7 @@ module.exports = {
         filename: '[name].js',
         sourceMapFilename: "[name].js.map"
     },
-    
+
     module: {
         rules: [
             {
@@ -31,7 +31,11 @@ module.exports = {
                         loader: "ts-loader"
                     }
                 ]
-            }
+            },
+            {
+                test: /\.css$/i,
+                use: ["style-loader", "css-loader"],
+            },
         ]
     },
     resolve: {
@@ -45,10 +49,11 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin({
             patterns: [
-            {
-                from: './index.html',
-                context: './htmlsrc'
-            }
-        ]})
+                {
+                    from: './index.html',
+                    context: './htmlsrc'
+                }
+            ]
+        })
     ]
 };
