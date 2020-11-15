@@ -1,0 +1,29 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "files.exclude": {
+        "debugDist": true,
+        "node_modules": true,
+    },
+    "search.exclude": {
+        "coverage": true,
+        "dist": true,
+        "drop": true,
+        "intl": true,
+        "lib": true,
+        "src/**/*.event.ts": true,
+        "src/**/*.resx.ts": true,
+        "temp": true,
+        "bin": true,
+        "obj": true,
+    },
+    "editor.insertSpaces": true,
+    "editor.renderWhitespace": "boundary",
+    "editor.tabSize": 4,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": true,
+    "editor.formatOnSave": true,
+    "tslint.autoFixOnSave": true,
+    "html.format.enable": false
+}

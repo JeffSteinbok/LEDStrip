@@ -1,27 +1,33 @@
-/* Font Families */
-@font-face
+html
 {
-    font-family: "Segoe UI Web Light";
-    font-style: normal;
-    font-weight: 100;
-    src: local("Segoe UI Light"),local("Segoe UI"),local("HelveticaNeue-Light");
-    unicode-range: U+0-FF,U+300-36F;
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
-@font-face
-{
-    font-family: "Segoe UI Web Regular";
-    font-style: normal;
-    font-weight: normal;
-    src: local("Segoe UI"),local("Helvetica Neue");
-    unicode-range: U+0-FF,U+300-36F;
+body {
+    font-size: 14px;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,"sans-serif";
+    color: #000;
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
-@font-face
-{
-    font-family: "Segoe UI Web Semibold";
-    font-style: normal;
-    font-weight: bold;
-    src: local("Segoe UI Semibold"),local("Segoe UI Bold"),local("Segoe UI"),local("HelveticaNeue-Medium");
-    unicode-range: U+0-FF,U+300-36F;
+div#configSection {
 }
+
+div#configSection div.config {
+    display:flex;
+    flex-direction: row;
+}
+
+div#configSection div.config div.name {
+    font-weight:bold;
+    width: 200px;
+}
+
+div#config div.name {
+    font-weight:bold;
+}
+

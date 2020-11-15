@@ -40,7 +40,7 @@ module.exports = {
     externals: {
         "react": "React",
         "react-dom": "ReactDOM",
-        "axios": "axios"
+        "axios": "axios",
     },
     plugins: [
         new CopyWebpackPlugin({

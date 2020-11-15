@@ -4,6 +4,7 @@ import { WebServerApiManager, IApiExecutionContext } from "./utilities/WebServer
 
 interface ILEDState {
     effect: string;
+    colorValue: string;
 }
 
 export class LED extends React.Component<any, ILEDState> {
@@ -14,55 +15,78 @@ export class LED extends React.Component<any, ILEDState> {
 
     perEffectParams = {
         "marquee": {},
-        "comet":  {},
+        "comet": {},
         "huerotate": {},
-        "solid": {}
+        "solid": {
+            "color": "FF0000"
+        }
     };
-    
-    
+
+
     constructor(props: any) {
         super(props);
 
         this.state = {
-            effect: "huerotate"
+            effect: "solid",
+            colorValue: "#ddd"
         }
     }
 
     render() {
         return (
             <div id="led">
-                <select onChange={e => this.setEffect(e.target.value)}>
-                    <option value="solid">Solid</option>
-                    <option value="marquee">Marquee</option>
-                    <option value="huerotate">Hue Rotate</option>
-                    <option value="comet">Comet</option>
-                </select>
+                <h1>LED Strip</h1>
+                <div id="configSection">
+                    <div className="config">
+                        <div className="name">Effect: </div>
+                        <div>
+                            <select onChange={ e => this.setEffect(e.target.value) }>
+                                <option value="solid">Solid</option>
+                                <option value="marquee">Marquee</option>
+                                <option value="huerotate">Hue Rotate</option>
+                                <option value="comet">Comet</option>
+                                <option value="twinkle">Twinkle</option>
+                            </select>
+                        </div>
+                    </div>
 
-                <div>
-                    Brightness: <input onChange={e => { this.globalEffectParams.brightness = Number.parseInt(e.target.value); } } />
+                    <div className="config">
+                        <div className="name">Brightness:</div>
+                        <div>
+                            <input defaultValue={ 16 }
+                                onChange={ e => { this.globalEffectParams.brightness = Number.parseInt(e.target.value); } } />
+                        </div>
+                    </div>
+
+
+                    { this.state.effect == "solid" &&
+                        <div className="config">
+                            <div className="name"> Color (hex):</div>
+                            <div>
+                                <input onChange={ e => { this.perEffectParams["solid"]["color"] = e.target.value; } } defaultValue={ this.perEffectParams["solid"]["color"] } />
+                            </div>
+                        </div>
+                    }
+
+
+                    { this.state.effect == "comet" &&
+                        <div className="config">
+                            <div className="name">Length:</div>
+                            <div>
+                                <input defaultValue={ 10 }
+                                    onChange={ e => { this.perEffectParams["comet"]["length"] = e.target.value; } } />
+                            </div>
+                        </div>
+                    }
                 </div>
-
-
-                { this.state.effect == "solid" && 
-                    <div>
-                        Color (hex): <input onChange={e => { this.perEffectParams["solid"]["color"] = e.target.value; } } />
-                    </div>
-                }
-
-
-                { this.state.effect == "comet" && 
-                    <div>
-                        Length: <input onChange={e => { this.perEffectParams["comet"]["length"] = e.target.value; } } />
-                    </div>
-                }
-
-                <button onClick={e => { this.updateLeds() }}>Update</button>
+                <p />
+                <button onClick={ e => { this.updateLeds() } }>Update LED Strip</button>
             </div>
         );
     }
 
     setEffect = (effectName) => {
-        this.setState({effect: effectName});
+        this.setState({ effect: effectName });
     }
 
     updateLeds = () => {
@@ -83,7 +107,7 @@ export class LED extends React.Component<any, ILEDState> {
 
         let context = {
             showProgressIndicator: true,
-            apiName: "/effect?name=" + this.state.effect + qs,
+            apiName: "http://192.168.2.14/effect?name=" + this.state.effect + qs,
             json: false,
             formData: null,
             success: null,
