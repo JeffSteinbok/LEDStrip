@@ -49,7 +49,7 @@ String g_indexJSCache = "";
 // Tracks a weighted average to smooth out the values that it calcs as the simple reciprocal
 // of the amount of time taken specified by the caller.  So 1/3 of a second is 3 fps, and it
 // will take up to 10 frames or so to stabilize on that value.
-void UpdateOLED(String status)
+void UpdateOLED(const String &status)
 {
     g_OLED.clearBuffer();
     g_OLED.setCursor(0, g_lineHeight);
@@ -61,11 +61,6 @@ void UpdateOLED(String status)
     g_OLED.sendBuffer();
 }
 
-void UpdateOLED(char *status)
-{
-    UpdateOLED(String(status));
-}
-
 double FramesPerSecond(double seconds)
 {
     static double framesPerSecond;
@@ -73,7 +68,7 @@ double FramesPerSecond(double seconds)
     return framesPerSecond;
 }
 
-bool getParamByte(AsyncWebServerRequest *request, String name, byte &bValue)
+bool getParamByte(AsyncWebServerRequest *request, const String &name, byte &bValue)
 {
     if (request->hasParam(name))
     {
@@ -85,7 +80,7 @@ bool getParamByte(AsyncWebServerRequest *request, String name, byte &bValue)
     return false;
 }
 
-bool getParamLong(AsyncWebServerRequest *request, String name, long &lValue)
+bool getParamLong(AsyncWebServerRequest *request, const String &name, long &lValue)
 {
     if (request->hasParam(name))
     {
@@ -97,7 +92,7 @@ bool getParamLong(AsyncWebServerRequest *request, String name, long &lValue)
     return false;
 }
 
-bool getParamString(AsyncWebServerRequest *request, String name, String &strValue)
+bool getParamString(AsyncWebServerRequest *request, const String &name, String &strValue)
 {
     if (request->hasParam(name))
     {

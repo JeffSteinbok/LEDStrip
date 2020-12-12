@@ -4,11 +4,11 @@
 #include "effect.h"
 #include <ESPAsyncWebServer.h>
 
-void UpdateOLED(std::string status);
+void UpdateOLED(const String &status);
 double FramesPerSecond(double seconds);
-bool getParamByte(AsyncWebServerRequest *request, String name, byte &bValue);
-bool getParamLong(AsyncWebServerRequest *request, String name, long &lValue);
-bool getParamString(AsyncWebServerRequest *request, String name, String &strValue);
+bool getParamByte(AsyncWebServerRequest *request, const String &name, byte &bValue);
+bool getParamLong(AsyncWebServerRequest *request, const String &name, long &lValue);
+bool getParamString(AsyncWebServerRequest *request, const String &name, String &strValue);
 
 template <typename T>
 void initializeEffect(Effect effect, String name);
