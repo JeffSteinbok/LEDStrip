@@ -55,7 +55,7 @@ export class LED extends React.Component<any, ILEDState> {
                     <div className="config">
                         <div className="name">Brightness:</div>
                         <div>
-                            <input defaultValue={ 16 }
+                            <input defaultValue={ 12 }
                                 onChange={ e => { this.globalEffectParams.brightness = Number.parseInt(e.target.value); } } />
                         </div>
                     </div>
@@ -102,6 +102,10 @@ export class LED extends React.Component<any, ILEDState> {
     }
 
     updateLeds = () => {
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const ipAddr: string = urlParams.get('ip');
+
         let qs = "";
         let perEffectParams = this.perEffectParams[this.state.effect];
 
@@ -119,7 +123,7 @@ export class LED extends React.Component<any, ILEDState> {
 
         let context = {
             showProgressIndicator: true,
-            apiName: "http://192.168.2.14/effect?name=" + this.state.effect + qs,
+            apiName: (ipAddr == "" ? "" : "http://" + ipAddr) + "/effect?name=" + this.state.effect + qs,
             json: false,
             formData: null,
             success: null,
