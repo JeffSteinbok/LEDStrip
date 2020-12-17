@@ -13,27 +13,32 @@ struct SolidEffectConfig
 
 class SolidEffect : public EffectBase
 {
-    private:
-        SolidEffectConfig  config;
-        
-    public:
-        SolidEffect(CRGB* pLEDs, int numLEDs) : EffectBase(pLEDs, numLEDs)
+private:
+    SolidEffectConfig config;
+
+public:
+    SolidEffect(CRGB *pLEDs, int numLEDs) : EffectBase(pLEDs, numLEDs)
+    {
+        this->config.color.setRGB(255, 0, 0);
+    }
+
+    void SetConfig(SolidEffectConfig &config)
+    {
+        this->config.color = config.color;
+        this->Reset();
+    }
+
+    virtual bool Draw()
+    {
+        bool bRet = false;
+        TIMES_PER_SECOND(10)
         {
-            this->config.color.setRGB(255, 0, 0);
+            bRet = true;
+            fill_solid(this->pLEDs, this->numLEDs, this->config.color);
         }
 
-        void SetConfig(SolidEffectConfig& config)
-        {
-            this->config.color = config.color;
-            this->Reset();
-        }
-        
-        virtual void Draw() 
-        {
-            fill_solid(this->pLEDs, this->numLEDs, this->config.color);
-            delay(100);
-        }
-        
+        return bRet;
+    }
 };
 
 #endif

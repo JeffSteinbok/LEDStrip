@@ -14,12 +14,11 @@ body {
     height: 100%;
 }
 
-div#configSection {
-}
 
 div#configSection div.config {
     display:flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 div#configSection div.config div.name {
@@ -27,6 +26,13 @@ div#configSection div.config div.name {
     width: 200px;
 }
 
-div#config div.name {
+div.config div.name {
     font-weight:bold;
 }
+
+div.config div.break {
+    flex-basis:100%;
+    height:0
+}
+
+

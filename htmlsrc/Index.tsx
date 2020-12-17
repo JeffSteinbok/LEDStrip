@@ -21,6 +21,10 @@ export class LED extends React.Component<any, ILEDState> {
         "huerotate": {},
         "solid": {
             "color": "FF0000"
+        },
+        "bouncingBall": {
+            "ballCount": "3",
+            "fade": "10"
         }
     };
 
@@ -48,6 +52,7 @@ export class LED extends React.Component<any, ILEDState> {
                                 <option value="huerotate">Hue Rotate</option>
                                 <option value="comet">Comet</option>
                                 <option value="twinkle">Twinkle</option>
+                                <option value="bouncingBall">Bouncing Balls</option>
                             </select>
                         </div>
                     </div>
@@ -88,6 +93,28 @@ export class LED extends React.Component<any, ILEDState> {
                                 <input defaultValue={ 10 }
                                     onChange={ e => { this.perEffectParams["comet"]["length"] = e.target.value; } } />
                             </div>
+                            <div className="break"></div>
+                            <div className="name">Speed:</div>
+                            <div>
+                                <input defaultValue={ 1 }
+                                    onChange={ e => { this.perEffectParams["comet"]["speed"] = e.target.value; } } />
+                            </div>
+                        </div>
+                    }
+
+                    { this.state.effect == "bouncingBall" &&
+                        <div className="config">
+                            <div className="name">Num Balls:</div>
+                            <div>
+                                <input defaultValue={ 10 }
+                                    onChange={ e => { this.perEffectParams["bouncingBall"]["ballCount"] = e.target.value; } } />
+                            </div>
+                            <div className="break"></div>
+                            <div className="name">Fade:</div>
+                            <div>
+                                <input defaultValue={ 1 }
+                                    onChange={ e => { this.perEffectParams["bouncingBall"]["fade"] = e.target.value; } } />
+                            </div>
                         </div>
                     }
                 </div>
@@ -123,7 +150,7 @@ export class LED extends React.Component<any, ILEDState> {
 
         let context = {
             showProgressIndicator: true,
-            apiName: (ipAddr == "" ? "" : "http://" + ipAddr) + "/effect?name=" + this.state.effect + qs,
+            apiName: (ipAddr == null ? "" : "http://" + ipAddr) + "/effect?name=" + this.state.effect + qs,
             json: false,
             formData: null,
             success: null,

@@ -23,6 +23,7 @@ int g_numLEDs = NUM_LEDS;
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C g_OLED(U8G2_R2, OLED_RESET, OLED_CLOCK, OLED_DATA);
 int g_lineHeight = 0;
 int g_Brightness = 4; // 0-255 brightness scale
+int g_powerLimit = 900;
 int g_cometLength = 10;
 
 AsyncWebServer server(80); // Object of WebServer(HTTP port, 80 is defult)
@@ -32,23 +33,19 @@ AsyncWebServer server(80); // Object of WebServer(HTTP port, 80 is defult)
 #include "solidEffect.h"
 #include "marquee.h"
 #include "twinkle.h"
-#include "comet.h"
+#include "effects/comet.h"
+#include "effects/bouncingBallEffect.h"
 #include "huerotate.h"
 #include "ArduinoOTA.h"
 
 bool g_fIsOn = true;
-Effect g_runningEffect = Effect::HueRotate;
+Effect g_runningEffect = Effect::BouncingBall;
 EffectBase *g_effects[NUM_EFFECTS];
 std::map<String, Effect> effectMap;
 
 String g_OLEDMessage = "";
 String g_indexJSCache = "";
 
-// FramesPerSecond
-//
-// Tracks a weighted average to smooth out the values that it calcs as the simple reciprocal
-// of the amount of time taken specified by the caller.  So 1/3 of a second is 3 fps, and it
-// will take up to 10 frames or so to stabilize on that value.
 void UpdateOLED(const String &status)
 {
     g_OLED.clearBuffer();
@@ -59,13 +56,6 @@ void UpdateOLED(const String &status)
     g_OLED.print(status);
 
     g_OLED.sendBuffer();
-}
-
-double FramesPerSecond(double seconds)
-{
-    static double framesPerSecond;
-    framesPerSecond = (framesPerSecond * .9) + (1.0 / seconds * .1);
-    return framesPerSecond;
 }
 
 bool getParamByte(AsyncWebServerRequest *request, const String &name, byte &bValue)
@@ -227,6 +217,7 @@ void setup()
     initializeEffect<Comet>(Effect::Comet, "comet");
     initializeEffect<HueRotate>(Effect::HueRotate, "huerotate");
     initializeEffect<Twinkle>(Effect::Twinkle, "twinkle");
+    initializeEffect<BouncingBallEffect>(Effect::BouncingBall, "bouncingBall");
 
     // Start server
     server.begin();
@@ -234,58 +225,56 @@ void setup()
 
 void loop()
 {
-    bool bLED = 0;
-    double fps = 0;
 
-    for (;;)
+    ArduinoOTA.handle();
+
+    if (g_fIsOn)
     {
-        ArduinoOTA.handle();
-
-        bLED = !bLED; // Blink the LED off and on
-        //digitalWrite(LED_BUILTIN, bLED);
-
-        if (g_fIsOn)
+        if (g_effects[static_cast<int>(g_runningEffect)]->Draw())
         {
-            double dStart = millis() / 1000.0; // Display a frame and calc how long it takes
-
-            // Handle OLED drawing
-            static unsigned long msLastUpdate = millis();
-            if (millis() - msLastUpdate > 250)
-            {
-                g_OLED.clearBuffer();
-                g_OLED.setCursor(0, g_lineHeight);
-                g_OLED.printf("IP: ");
-
-                // This is REALLY ugly.  I don't like it at all.  Assumes string is null terminated.
-                // Does seem to work in this case though.
-                g_OLED.print(&(WiFi.localIP().toString()[0]));
-
-                g_OLED.setCursor(0, g_lineHeight * 2);
-                g_OLED.printf("FPS: %.1lf", fps);
-
-                g_OLED.setCursor(0, g_lineHeight * 3);
-                g_OLED.printf(&(g_OLEDMessage[0]));
-
-                g_OLED.sendBuffer();
-                msLastUpdate = millis();
-            }
-
-            g_effects[static_cast<int>(g_runningEffect)]->Draw();
-
             FastLED.setBrightness(g_Brightness);
-            FastLED.show();
+            FastLED.setMaxPowerInMilliWatts(g_powerLimit); // Not sure this is the value I want to use, but ok for now.
+            set_max_power_indicator_LED(LED_BUILTIN);
 
-            double dEnd = millis() / 1000.0;
-            fps = FramesPerSecond(dEnd - dStart);
+            FastLED.show();
         }
-        else
+
+        // Handle OLED drawing
+        EVERY_N_MILLISECONDS(250)
         {
+            //uint32_t milliwatts = calculate_unscaled_power_mW(g_LEDs, g_numLEDs);
+            int lineNum = 1;
 
-            fill_solid(g_LEDs, NUM_LEDS, CRGB::Black);
-            delay(50);
-            FastLED.setBrightness(0);
-            FastLED.show();
+            g_OLED.clearBuffer();
+            g_OLED.setCursor(0, g_lineHeight * lineNum++);
+            g_OLED.printf("IP: ");
+
+            // This is REALLY ugly.  I don't like it at all.  Assumes string is null terminated.
+            // Does seem to work in this case though.
+            g_OLED.print(WiFi.localIP().toString());
+
+            g_OLED.setCursor(0, g_lineHeight * lineNum++);
+            g_OLED.printf("FPS: %u", FastLED.getFPS());
+
+            //g_OLED.setCursor(0, g_lineHeight * lineNum++);
+            //g_OLED.printf("Power: %u mW", milliwatts);
+
+            g_OLED.setCursor(0, g_lineHeight * lineNum++);
+            g_OLED.print(g_OLEDMessage);
+
+            g_OLED.setCursor(0, g_lineHeight * lineNum++);
+            g_OLED.printf("Brite: %d", calculate_max_brightness_for_power_mW(g_Brightness, g_powerLimit));
+
+            g_OLED.sendBuffer();
         }
+    }
+    else
+    {
+
+        fill_solid(g_LEDs, NUM_LEDS, CRGB::Black);
+        delay(50);
+        FastLED.setBrightness(0);
+        FastLED.show();
     }
 }
 
@@ -364,12 +353,21 @@ void handleRouteEffect(AsyncWebServerRequest *request)
             {
                 CometConfig cometConfig;
                 getParamByte(request, "length", cometConfig.length);
+                getParamByte(request, "speed", cometConfig.speed);
                 static_cast<Comet *>(g_effects[static_cast<int>(Effect::Comet)])->SetConfig(cometConfig);
                 break;
             }
             case Effect::Twinkle:
             {
                 static_cast<Twinkle *>(g_effects[static_cast<int>(Effect::Twinkle)])->Reset();
+                break;
+            }
+            case Effect::BouncingBall:
+            {
+                BouncingBallEffectConfig bouncingBallEffectConfig;
+                getParamByte(request, "ballCount", bouncingBallEffectConfig.ballCount);
+                getParamByte(request, "fade", bouncingBallEffectConfig.fade);
+                static_cast<BouncingBallEffect *>(g_effects[static_cast<int>(Effect::BouncingBall)])->SetConfig(bouncingBallEffectConfig);
                 break;
             }
             }

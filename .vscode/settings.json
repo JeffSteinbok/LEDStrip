@@ -3,6 +3,7 @@
     "files.exclude": {
         "debugDist": true,
         "node_modules": true,
+        "data": true,
     },
     "search.exclude": {
         "coverage": true,
@@ -15,6 +16,7 @@
         "temp": true,
         "bin": true,
         "obj": true,
+        "data": true
     },
     "editor.insertSpaces": true,
     "editor.renderWhitespace": "boundary",
