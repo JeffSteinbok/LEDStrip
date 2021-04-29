@@ -23,6 +23,8 @@ public:
 
         TIMES_PER_SECOND(20)
         {
+            bRet = true;
+
             this->hueStart += 4;
             byte k = this->hueStart;
 

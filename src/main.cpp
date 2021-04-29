@@ -22,7 +22,7 @@ int g_numLEDs = NUM_LEDS;
 
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C g_OLED(U8G2_R2, OLED_RESET, OLED_CLOCK, OLED_DATA);
 int g_lineHeight = 0;
-int g_Brightness = 4; // 0-255 brightness scale
+int g_Brightness = 5; // 0-255 brightness scale
 int g_powerLimit = 900;
 int g_cometLength = 10;
 
@@ -39,7 +39,7 @@ AsyncWebServer server(80); // Object of WebServer(HTTP port, 80 is defult)
 #include "ArduinoOTA.h"
 
 bool g_fIsOn = true;
-Effect g_runningEffect = Effect::BouncingBall;
+Effect g_runningEffect = Effect::HueRotate;
 EffectBase *g_effects[NUM_EFFECTS];
 std::map<String, Effect> effectMap;
 
