@@ -10,7 +10,7 @@
   "dependencies": {
     "@types/react": "^16.14.5",
     "@types/react-dom": "^16.9.12",
-    "axios": "^0.21.1",
+    "axios": "^0.32.0",
     "react": "^17.0.2",
     "react-colorful": "^4.4.4",
     "react-dom": "^17.0.2",
@@ -20,16 +20,16 @@
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
-    "braces": ">=2.3.1",
-    "copy-webpack-plugin": "^6.4.1",
+    "braces": ">=3.0.3",
+    "copy-webpack-plugin": "^14.0.0",
     "css-loader": "^5.2.4",
-    "node-sass": "^5.0.0",
+    "node-sass": "^9.0.0",
     "path": "^0.12.7",
     "sass": "^1.32.12",
     "style-loader": "^2.0.0",
-    "webpack": "^5.36.1",
+    "webpack": "^5.108.4",
     "webpack-cli": "^4.6.0",
-    "webpack-dev-server": "^3.11.2",
+    "webpack-dev-server": "^5.2.5",
     "webpack-merge": "^5.7.3"
   },
   "scripts": {
