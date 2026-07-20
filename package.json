@@ -10,7 +10,7 @@
   "dependencies": {
     "@types/react": "^16.14.5",
     "@types/react-dom": "^16.9.12",
-    "axios": "^0.32.0",
+    "axios": "^0.33.0",
     "react": "^17.0.2",
     "react-colorful": "^4.4.4",
     "react-dom": "^17.0.2",
